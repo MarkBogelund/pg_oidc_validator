@@ -71,7 +71,7 @@ host	all	rolename	127.0.0.1/32	oauth	scope="database",issuer=http://127.0.0.1:80
 
 Connection example:
 ```
-psql 'host=127.0.0.1 dbname=name user=rolename oauth_issuer=http://127.0.0.1:8080/realms/master oauth_client_id=database'
+psql 'host=127.0.0.1 dbname=name user=rolename oauth_issuer=https://127.0.0.1:8080/realms/master oauth_client_id=postgres'
 ```
 
 ### Microsoft / Entra ID
