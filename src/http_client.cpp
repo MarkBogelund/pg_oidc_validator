@@ -15,8 +15,6 @@ extern "C" {
 #include <regex>
 #include <string_view>
 
-extern bool pg_oidc_validator_insecure_skip_tls_verify;
-
 http_client::http_client() : curl(curl_easy_init()), last_max_age_(std::nullopt) {
   if (curl == nullptr) {
     throw std::runtime_error("Failed to initialize libcurl");
@@ -97,11 +95,6 @@ picojson::value http_client::get_json(const std::string& url) {
   curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);
   curl_easy_setopt(curl, CURLOPT_HEADERDATA, this);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
-
-  if (pg_oidc_validator_insecure_skip_tls_verify) {
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-  }
 
   CURLcode res = curl_easy_perform(curl);
 

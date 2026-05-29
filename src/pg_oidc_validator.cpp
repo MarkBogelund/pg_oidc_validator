@@ -33,9 +33,6 @@ static char* authn_field = nullptr;
 // When non-empty, the validator uses this URL (instead of pg_hba's `issuer=`)
 static char* discovery_url_override = nullptr;
 
-// Off by default; only meant for local development against self-signed Keycloak/IdP certs.
-bool pg_oidc_validator_insecure_skip_tls_verify = false;
-
 extern "C" void _PG_init() {
   DefineCustomStringVariable("pg_oidc_validator.authn_field",
                              gettext_noop("OAuth field used for matching PostgreSQL users"), nullptr, &authn_field,
@@ -45,11 +42,6 @@ extern "C" void _PG_init() {
       gettext_noop("If set, fetch OIDC discovery and JWKS from this URL instead of the pg_hba issuer."),
       gettext_noop("The JWT `iss` claim is still validated against the pg_hba issuer."),
       &discovery_url_override, "", PGC_SIGHUP, 0, nullptr, nullptr, nullptr);
-  DefineCustomBoolVariable(
-      "pg_oidc_validator.insecure_skip_tls_verify",
-      gettext_noop("Disable TLS certificate verification for OIDC discovery and JWKS fetches."),
-      gettext_noop("UNSAFE. Only intended for local development against self-signed certs."),
-      &pg_oidc_validator_insecure_skip_tls_verify, false, PGC_SIGHUP, 0, nullptr, nullptr, nullptr);
 }
 
 bool validate_token(const ValidatorModuleState* state, const char* token, const char* role,
